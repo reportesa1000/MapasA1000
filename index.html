@@ -708,6 +708,54 @@
         
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-groupedlayercontrol/0.6.1/leaflet.groupedlayercontrol.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-groupedlayercontrol/0.6.1/leaflet.groupedlayercontrol.min.css"/>
+<style id="aui-static-map-layers-style">
+  #aui-static-map-layers-control.leaflet-control-layers {
+    margin-top: 108px;
+    max-width: min(330px, calc(100vw - 20px));
+    padding: 5px;
+    background: rgba(255, 255, 255, .97);
+  }
+  #aui-static-map-layers-control .leaflet-control-layers-toggle { display: none; }
+  #aui-static-map-layers-control .leaflet-control-layers-list { display: none; max-height: calc(100vh - 180px); overflow-y: auto; overscroll-behavior: contain; }
+  #aui-static-map-layers-control.aui-layers-open .leaflet-control-layers-list { display: block; }
+  #aui-static-map-layers-toggle {
+    display: block; width: 100%; min-width: 105px; min-height: 32px;
+    padding: 5px 9px; border: 0; border-radius: 4px;
+    background: #1f6fb2; color: white; cursor: pointer;
+    font: 600 13px Arial, sans-serif; text-align: center;
+  }
+  #aui-static-map-layers-toggle:focus-visible { outline: 2px solid #153d66; outline-offset: 2px; }
+  #aui-static-map-layers-control.aui-layers-open #aui-static-map-layers-toggle { margin-bottom: 6px; }
+  @media (max-width: 600px) {
+    #aui-static-map-layers-control.leaflet-control-layers { margin-top: 105px; }
+    #aui-static-map-layers-control .leaflet-control-layers-list { max-height: calc(100vh - 165px); }
+  }
+</style>
+<script>window.addEventListener('load', function () {
+  const control = document.querySelector('.leaflet-control-layers');
+  if (!control) return;
+  const list = control.querySelector('.leaflet-control-layers-list');
+  if (!list || document.getElementById('aui-static-map-layers-toggle')) return;
+  control.id = 'aui-static-map-layers-control';
+  list.id = 'aui-static-map-layers-list';
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.id = 'aui-static-map-layers-toggle';
+  button.setAttribute('aria-controls', list.id);
+  control.insertBefore(button, list);
+  function mostrar(abierto) {
+    control.classList.toggle('aui-layers-open', abierto);
+    button.setAttribute('aria-expanded', String(abierto));
+    button.textContent = abierto ? 'Ocultar capas ▴' : 'Capas ▾';
+    button.title = abierto ? 'Minimizar la lista de capas' : 'Mostrar la lista de capas';
+  }
+  button.addEventListener('click', function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    mostrar(!control.classList.contains('aui-layers-open'));
+  });
+  mostrar(false);
+});</script>
 </head>
 <body>
     
@@ -90740,7 +90788,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         "REM (Estaciones Meteorol\u00f3gicas)" : feature_group_a3a38f042cd324da1d79d6af5f934ad0,
                     },
                 },
-                {"collapsed": true},
+                {"collapsed": false},
             ).addTo(map_401e7122a5f76ae97102f959bb905f9f);
             feature_group_6a241880aaad3412dc764daecb161d38.remove();
             feature_group_45b78c3cad53f077e242f008e94fac83.remove();
